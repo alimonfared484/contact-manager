@@ -1,15 +1,8 @@
-import {
-  CURRENTTLINE,
-  CYAN,
-  ORANGE,
-  PINK,
-  PURPLE,
-  RED,
-} from "../../helpers/colors";
-
 import Contact from "./Contact";
+import Spinner from "../Spinner";
+import { CURRENTTLINE, ORANGE, PINK } from "../../helpers/colors";
 
-const Contacts = ({contacts}) => {
+const Contacts = ({ contacts, loading }) => {
   return (
     <>
       <section className="container">
@@ -26,21 +19,30 @@ const Contacts = ({contacts}) => {
           </div>
         </div>
       </section>
-      <section className="container">
+      {
+        loading ? <Spinner /> :(
+        <section className="container">
         <div className="row">
-            {
-                contacts.lenght > 0 ? contacts.map(c  => <Contact key={c.id} contact={c} />) 
-                : (
-                    <div className="text-center py-5" style={{backgroundColor: CURRENTTLINE}}>
-                        <p className="h3" style={{color: ORANGE}}>
-                            مخاطب یافت نشد ...
-                        </p>
-                        <img src={require("../../assets/no-found.gif")} alt="پیدا نشد" className="w-25" />
-                    </div>
-                )
-            }
+          {contacts.lenght > 0 ? (
+            contacts.map((c) => <Contact key={c.id} contact={c} />)
+          ) : (
+            <div
+              className="text-center py-5"
+              style={{ backgroundColor: CURRENTTLINE }}
+            >
+              <p className="h3" style={{ color: ORANGE }}>
+                مخاطب یافت نشد ...
+              </p>
+              <img
+                src={require("../../assets/no-found.gif")}
+                alt="پیدا نشد"
+                className="w-25"
+              />
+            </div>
+          )}
         </div>
       </section>
+      )}
     </>
   );
 };
