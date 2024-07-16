@@ -1,20 +1,121 @@
-import { useState } from 'react';
+import { useState, useEffect } from "react";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
-import Navbar from './components/Navbar';
-import Contacts from './components/contact/Contacts';
+import {
+  AddContact,
+  Contact,
+  Contacts,
+  EditContact,
+  Navbar,
+} from "./components";
 
-import './App.css';
+import { createContact, getAllContacts, getAllGroups } from "./services/contactService";
 
-function App() {
-  const [loading, setLoading] = useState(false)
-  const [getcontacts, setContacts] = useState([])
+import "./App.css";
+
+const App = () => {
+  const [loading, setLoading] = useState(false);
+  const [forceRender, setForceRender] = useState(false)
+  const [getContacts, setContacts] = useState([]);
+  const [getGroups, setGroups] = useState([]);
+  const [getContact, setContact] = useState({
+    fullname: "",
+    photo: "",
+    mobile: "",
+    email: "",
+    job: "",
+    group: "",
+  });
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        const { data: contactsData } = await getAllContacts();
+        const { data: groupsData } = await getAllGroups();
+
+        setContacts(contactsData);
+        setGroups(groupsData);
+
+        setLoading(false);
+      } catch (err) {
+        console.log(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        const { data: contactsData } = await getAllContacts();
+        setContacts(contactsData);
+
+        setLoading(false);
+      } catch (err) {
+        console.log(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [forceRender])
+
+  const createContactFrom = async (event) => {
+    event.preventDefault();
+    try{
+      const {status} = await createContact(getContact)
+
+      if(status === 201) {
+        setContact({})
+        setForceRender(!forceRender)
+        navigate("/contacts")
+      }
+    }catch(err) {
+      console.log(err.message);
+    }
+  }
+
+  const setContactInfo = (event) => {
+    setContact({
+      ...getContact,
+      [event.target.name]: event.target.value
+    });
+  };
 
   return (
     <div className="App">
-        <Navbar />
-        <Contacts contacts={getcontacts} loading={loading} />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Navigate to="/contacts" />} />
+        <Route
+          path="/contacts"
+          element={<Contacts contacts={getContacts} loading={loading} />}
+        />
+        <Route
+          path="/contacts/add"
+          element={
+            <AddContact
+              loading={loading}
+              setContactInfo={setContactInfo}
+              contact={getContact}
+              groups={getGroups}
+              createContactForm={createContactFrom}
+            />
+          }
+        />
+        <Route path="/contacts/:contactId" element={<Contact />} />
+        <Route path="/contacts/edit/:contactId" element={<EditContact />} />
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;
