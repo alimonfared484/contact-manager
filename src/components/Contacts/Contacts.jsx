@@ -1,18 +1,22 @@
 import Contact from "./Contact";
 import Spinner from "../Spinner";
-import { CURRENTTLINE, ORANGE, PINK } from "../../helpers/colors";
+import { CURRENTLINE, ORANGE, PINK } from "../../helpers/colors";
 import { Link } from "react-router-dom";
 // import NotFound from "../../assets/no-found.gif";
 
-const Contacts = ({ contacts, loading }) => {
+const Contacts = ({ contacts, loading, confirmDelete }) => {
   return (
     <>
       <section className="container">
         <div className="grid">
           <div className="row">
             <div className="col">
-              <p className="h3">
-                <Link to={"/contacts/add"} className="btn mx-2" style={{ backgroundColor: PINK }}>
+              <p className="h3 float-end">
+                <Link
+                  to={"/contacts/add"}
+                  className="btn m-2"
+                  style={{ backgroundColor: PINK }}
+                >
                   ساخت مخاطب جدید
                   <i className="fa fa-plus-circle mx-2" />
                 </Link>
@@ -21,26 +25,34 @@ const Contacts = ({ contacts, loading }) => {
           </div>
         </div>
       </section>
-      {loading ? <Spinner /> : (
+      {loading ? (
+        <Spinner />
+      ) : (
         <section className="container">
           <div className="row">
-            {contacts.length > 0
-              ? contacts.map((c) => <Contact key={c.id} contact={c} />)
-              : (
-                <div
-                  className="text-center py-5"
-                  style={{ backgroundColor: CURRENTTLINE }}
-                >
-                  <p className="h3" style={{ color: ORANGE }}>
-                    مخاطب یافت نشد ...
-                  </p>
-                  <img
-                    src={require("../../assets/no-found.gif")}
-                    alt="پیدا نشد"
-                    className="w-25"
-                  />
-                </div>
-              )}
+            {contacts.length > 0 ? (
+              contacts.map((c) => (
+                <Contact
+                  key={c.id}
+                  confirmDelete={() => confirmDelete(c.id, c.fullname)}
+                  contact={c}
+                />
+              ))
+            ) : (
+              <div
+                className="text-center py-5"
+                style={{ backgroundColor: CURRENTLINE }}
+              >
+                <p className="h3" style={{ color: ORANGE }}>
+                  مخاطب یافت نشد ...
+                </p>
+                <img
+                  src={require("../../assets/no-found.gif")}
+                  alt="پیدا نشد"
+                  className="w-25"
+                />
+              </div>
+            )}
           </div>
         </section>
       )}

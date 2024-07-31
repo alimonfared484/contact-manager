@@ -1,7 +1,7 @@
 // Dracula Theme Colors
 
 export const BACKGROUND = "#282a36" 
-export const CURRENTTLINE = "#44475A" 
+export const CURRENTLINE = "#44475A" 
 export const FOREGROUND = "#F8F8F2" 
 export const COMMENT = "#6272A4" 
 export const CYAN = "#8BE9FD" 

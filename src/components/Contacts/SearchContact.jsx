@@ -1,6 +1,6 @@
 import { PURPLE } from "../../helpers/colors";
 
-const SearchContact = () => {
+const SearchContact = ({query, search}) => {
   return (
     <div className="input-group mx-sm-2 mx-3 w-75 d-flex justify-content-center w-100" dir="ltr">
       <span
@@ -13,6 +13,8 @@ const SearchContact = () => {
       <input
         dir="rtl"
         type="text"
+        value={query.text}
+        onChange={search}
         className="form-control"
         placeholder="جستجوی مخاطب"
         aria-label="Search"
